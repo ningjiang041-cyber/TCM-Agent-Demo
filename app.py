@@ -4,12 +4,12 @@ from openai import OpenAI
 import base64
 
 st.set_page_config(page_title="中医智能辅助诊疗系统", layout="wide")
-st.title("🧑‍⚕️ 中医“病-证-法-方-效”智能辅助诊疗系统")
+st.title("中医“病-证-法-方-效”智能辅助诊疗系统")
 
 try:
     api_key = st.secrets["DASHSCOPE_API_KEY"]
 except Exception:
-    st.error("⚠️ 请在 Streamlit 控制台的 Secrets 中配置 DASHSCOPE_API_KEY")
+    st.error("请在 Streamlit 控制台的 Secrets 中配置 DASHSCOPE_API_KEY")
     st.stop()
 
 client = OpenAI(api_key=api_key, base_url="https://dashscope.aliyuncs.com/compatible-mode/v1")
@@ -36,7 +36,7 @@ with col2:
                     image_bytes = uploaded_file.read()
                     base64_image = base64.b64encode(image_bytes).decode('utf-8')
                     vl_response = client.chat.completions.create(
-                        model="qwen-vl-plus",
+                        model="qwen3-vl-plus",
                         messages=[{
                             "role": "user",
                             "content": [
@@ -46,7 +46,7 @@ with col2:
                         }]
                     )
                     tongue_desc = vl_response.choices[0].message.content
-                    st.info(f"👁️ 多模态视觉分析：{tongue_desc}")
+                    st.info(f"多模态视觉分析：{tongue_desc}")
 
                 # 2. 整合文本和图像，发给大模型
                 final_query = f"文字症状：{user_input}。舌象特征：{tongue_desc}"
